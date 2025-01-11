@@ -14,7 +14,7 @@ export const POST = async(req:Request, res:any) => {
         })
 
         if (existingUserVerifiedByUsername) {
-            return res.status(400).json({success:false, message:"Username already exists."});
+            return Response.json({success:false, message:"Username already exists."}, {status:400});
         }
 
         const existingUserByEmail = await UserModel.findOne({email});
@@ -22,7 +22,7 @@ export const POST = async(req:Request, res:any) => {
 
         if (existingUserByEmail) {
             if (existingUserByEmail.isVerified) {
-                return res.status(500).json({success:false, message:"user already exist"})
+                return Response.json({success:false, message:"user already exist"}, {status:500})
             } else {
                 const hashedPassword = await bcrypt.hash(password, 10);
                 existingUserByEmail.password = hashedPassword;
@@ -50,13 +50,16 @@ export const POST = async(req:Request, res:any) => {
 
 
         const emailResponse = await sendVerificationEmail(email, username, verifyCode);
-        if (emailResponse.success) {
-            return res.status(500).json({success:false, message:emailResponse.message})
+        console.log("\n\nOTP", verifyCode);
+        console.log("\n\nENV", process.env.NEXTAUTH_SECRET, "\n\n");
+        
+        if (!emailResponse.success) {
+            return Response.json({success:false, message:emailResponse.message}, {status:500})
         }
-        return res.status(201).json({success:true, message:"User registered successfully, please verify your email"});
+        return Response.json({success:true, message:"User registered successfully, please verify your email"}, {status:201});
     }
     catch(err){
         console.log("Error registering user", err);
-        return res.status(500).json({ success:false, message: "Error registering user"});
+        return Response.json({ success:false, message: "Error registering user"}, {status:500});
     }
 }
