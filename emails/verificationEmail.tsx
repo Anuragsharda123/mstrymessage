@@ -40,14 +40,6 @@ import {Html,Head,Font,Preview,Heading,Row,Section,Text,Button} from '@react-ema
               If you did not request this code, please ignore this email.
             </Text>
           </Row>
-          {/* <Row>
-            <Button
-              href={`http://localhost:3000/verify/${username}`}
-              style={{ color: '#61dafb' }}
-            >
-              Verify here
-            </Button>
-          </Row> */}
         </Section>
       </Html>
     );
